@@ -1,4 +1,4 @@
-$site = "https://giac.org"
+$site = "https://www.giac.org"
 
 # see if sitemap.xml exists:
 
@@ -26,11 +26,11 @@ $SMIstatusCodeInt = [int]$response.BaseResponse.StatusCode
 # and I want you to be able to read it
 
 # if sitemap.xml isn't there, try sitemap_index.xml
-if ($SMstatuscodeint -eq 200) {
+if ($SMstatuscodeint -eq 0) {
     $sitemap = invoke-webrequest -uri ($site + '/sitemap.xml')
     # parse out just the links, the values inside the "url" xml tags
-    $sitemaplinks = ([xml] $sitemap).urlset.url.loc
-    }
+    $sitemaplinks = ([xml] $sitemap).urlset.url.loc | sort | uniq
+    } 
 
 if ($SMIstatuscodeint -eq 200) {
     #first, collect the parent sitemap_index.xml, this only contains links to xml files:
@@ -44,11 +44,12 @@ if ($SMIstatuscodeint -eq 200) {
         $temp += ([xml] $s).urlset.url
         }
 
-    $sitemaplinks = $temp | sort | uniq
+    # the "+=" accounts for if you have both sitemap constructs
+    $sitemaplinks += $temp | sort | uniq
     }
 
 # get the actual site links, exported from burp or your favourite spidering tool:
-$sitelinks = get-content c:\work\spidered-links-exported-from-burp.txt
+$sitelinks = get-content c:\work\links-exported-from-burp.txt
 
 # remove trailing "/" chars from both lists
 
