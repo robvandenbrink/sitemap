@@ -48,7 +48,7 @@ if ($SMIstatuscodeint -eq 200) {
     }
 
 # get the actual site links, exported from burp or your favourite spidering tool:
-$sitelinks = get-content c:\work\giac-exported-from-burp.txt
+$sitelinks = get-content c:\work\spidered-links-exported-from-burp.txt
 
 # remove trailing "/" chars from both lists
 
